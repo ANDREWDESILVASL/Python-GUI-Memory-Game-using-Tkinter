@@ -1,0 +1,204 @@
+#Created by ANDREWDESILVASL 2019
+
+from tkinter import *
+import tkinter as tk
+from tkinter import ttk
+root = Tk()
+root.title("Memory Matching Game") #Main window Name
+import time
+from time import clock
+import random
+from tkinter import messagebox
+root.configure(bg="black") #Main window Background color
+canvas = Canvas(root)
+
+label_1 = Label(root, text="Score", font="Times 16", width=6, height=1, ) #Creating the score Text
+label_1.grid(row=4, column=0) #Creating the score Text
+
+label_2 = Label(root, text="Level", font="Times 16", width=6, height=1) #Creating the Level Text
+label_2.grid(row=4, column=2) #Location of the level Text
+
+label_3 = Label(root, width=6, height=1, bg="grey", text=1, font="Times 14") #Creating the curunt level showing box
+label_3.grid(row=4, column=3) #Location of the level displaying box
+
+Label_4 = Label(root, width=6, height=1, bg="black", text="Time", font="Times 12", fg="white") #Creating the Time Text
+Label_4.grid(row=0, column=5) #Location of the Time Text
+
+
+
+
+global score
+score=0 #Starting Score Value
+
+
+def countdown(count): #Define a Timer
+    lab['text'] = count
+    if count > 0:
+        root.after(1000, countdown, count - 1) #Substract seconds
+    else:
+         if count == 0: #Time over
+            messagebox.showinfo(title="Game Over", message="Time up!") #Messagebox when time is over
+            root.destroy() #Close the Programme when countdown is over
+
+lab = tk.Label(root, bg="black", width=6, height=4, font="TimesNewRoman 12", fg="white") #creating the Timer Text
+lab.grid(row=0, column=6) #Location of the Timer Text
+countdown(60) #Time Limit
+
+
+buttons=[[tk.Button(root, bg="white", height=5, width=10, command=lambda row=row, column=column:choose_tile(row, column))for column in range(4)]for row in range(3)]
+for row in range(3):
+    for column in range(4):
+           buttons[row][column].grid(row=row,column=column)
+root.first = None
+
+x = list("112233445566") #List of pairs to a match
+random.shuffle(x) #shuffle the list
+x = [x[:4],
+     x[4:8],
+     x[8:12],
+     x[12:]]
+
+def button():
+    for row in buttons:
+        for button in row:
+            button.config(text='',state=tk.DISABLED)
+            button.config(state=tk.NORMAL)
+
+start_time=time.monotonic()
+
+def choose_tile(row, column):
+   global score
+   label_2 = Label(root, width=6, height=1, bg="red", font="Times 14") #Score counter color
+   label_2.grid(row=4, column=1) #score counter location
+   buttons[row][column].config(text=x[row][column])
+   buttons[row][column].config(state=tk.DISABLED)
+
+
+   def hide_tiles(row, column, b, c): #Configure Tiles in b column and C column
+       buttons[b][c].config(text='', state=tk.NORMAL)
+       buttons[row][column].config(text='', state=tk.NORMAL)
+
+
+   if not root.first:
+      root.first=(row, column)
+   else:
+       b,c = root.first
+       if x[row][column] == x[b][c]:
+           x[row][column] = ''
+           x[b][c] = ''
+           score+=20
+           print(str(score))
+           label_2["text"]=score
+       else:
+           score -= 5
+           print(score)
+           label_2["text"] = score
+           root.after(500, hide_tiles, row, column, b, c)
+       root.first = None
+
+       if not any(''.join(row) for  row in x):
+               duration = time.monotonic() - start_time
+               messagebox.showinfo(title='Level 1 Done!', message='You win! Time: {:.1f}>>>>> Next Level'.format(duration))
+               if messagebox==TRUE:
+                   root.destroy()
+               else:
+                   root.destroy()
+
+#*****************************LEVEL 2 *************************************************
+
+                   root1 = Tk()
+                   root1.title("Memory Matching Game") #Main window Name
+
+                   label_10 = Label(root1, text="Score", font="Times 16", width=6, height=1, ) #Creating the score Text
+                   label_10.grid(row=4, column=0) #Location of the Score Text
+
+                   label_11 = Label(root1, text="Level", font="Times 16", width=6, height=1) #creating the Level Text
+                   label_11.grid(row=4, column=2) #Location of the Level Text
+
+                   label_12= Label(root1, width=6, height=1, bg="grey", text=2, font="Times 14") #Creating the curunt Level showing box 
+                   label_12.grid(row=4, column=3) #Location of the Level displaying Box
+                   
+                   
+
+
+                   global score1
+                   score1 = 0 #Starting Score Value
+
+                   def countdown(count): #Define a Timer
+                       lab_1['text'] = count
+                       if count > 0:
+                           root.after(1000, countdown, count - 1) #Substract seconds
+                       else:
+                           if count == 0: #Time over
+                               messagebox.showinfo(title="Game Over", message="Time up!") #Messagebox when time is over
+                               root1.destroy() #Close the Programme when countdown is over
+
+                   lab_1 = tk.Label(root1, bg="black", width=6, height=4, font="TimesNewRoman 12", fg="white") #creating the Timer Text
+                   lab_1.grid(row=0, column=6) #Location of the Timer Text
+                   countdown(60) #Time Limit 
+ 
+                   buttons1=[[tk.Button(root1, bg="white", height=5, width=10,command=lambda row=row, column=column: choose_tile(row, column)) for column in range(4)] for row in range(3)]
+                   for row in range(3):
+                       for column in range(4):
+                           buttons1[row][column].grid(row=row, column=column)
+                   root1.first = None
+
+                   y = list("112233445566") #List of pairs to a match
+                   random.shuffle(y) #shuffle the list
+                   y = [y[:4],
+                        y[4:8],
+                        y[8:12],
+                        y[12:]]
+
+                   def button():
+                       for row in buttons1:
+                           for button in row:
+                               button.config(text='', state=tk.DISABLED)
+                               button.config(state=tk.NORMAL)
+
+                   start_time1 = time.monotonic()
+
+
+                   def choose_tile(row, column):
+                       global score1
+                       label_13 = Label(root1, width=6, height=1, bg="grey", font="Times 14")
+                       label_13.grid(row=4, column=1)
+                       buttons1[row][column].config(text=y[row][column])
+                       buttons1[row][column].config(state=tk.DISABLED)
+
+
+
+                       def hide_tiles(row, column, a, b):
+                           buttons1[a][b].config(text='', state=tk.NORMAL)
+                           buttons1[row][column].config(text='', state=tk.NORMAL)
+
+                       if not root1.first:
+                           root1.first = (row, column)
+                       else:
+                           a, b = root1.first
+                           if y[row][column] == y[a][b]:
+                               y[row][column] = ''
+                               y[a][b] = ''
+                               score1 += 20
+                               print(str(score1))
+                               label_13["text"] = score1
+                           else:
+                               score1 -= 5
+                               print(score1)
+                               label_13["text"] = score1
+                               root1.after(1000, hide_tiles, row, column, a, b)
+                           root1.first = None
+
+                           if not any(''.join(row) for row in y):
+                               duration = time.monotonic() - start_time1
+                               messagebox.showinfo(title='Level 2 Done!',message='You win! Time: {:.1f}'.format(duration))
+                               if messagebox == TRUE:
+                                   root1.destroy()
+                               else:
+                                   messagebox.showinfo(title='WELL DONE!',message='EXIT!')
+                                   root1.destroy()
+
+
+root.mainloop()
+
+
